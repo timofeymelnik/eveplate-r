@@ -4,7 +4,7 @@ const registryAddress = '0x0364a98148b7031451e79b93449b20090d79702a';
 
 export default new DeveryRegistry();
 
-export Utils from "@devery/devery"
+export {Utils} from "@devery/devery"
 
 export async function checkAndUpdateAllowance(account, minAllowance = 40, total = 100) {
     try {
