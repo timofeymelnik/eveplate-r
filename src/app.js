@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import devery, { Utils } from '@devery/devery'
-import deveryClient, {checkAndUpdateAllowance} from './devery'
+import deveryClient, {checkAndUpdateAllowance, Utils} from './devery'
 import LoadData from './LoadData'
 import PostData from './PostData';
 
@@ -30,7 +29,10 @@ export default class extends Component {
         }
     }
 
-    updateAccount = (account) => this.setState({account});
+    updateAccount = async (account) => {
+        await checkAndUpdateAllowance(this.state.account, hash);
+        this.setState({account});
+    };
 
     handleBrandAddrChange = ({ target: { value: checkBrandAddr } }) => this.setState({checkBrandAddr});
 
@@ -90,10 +92,7 @@ export default class extends Component {
 
     handleAddProduct = async (data) => {
         try {
-            console.log(this.state.account);
-            const {hash} = await deveryClient.addProduct(Utils.getRandomAddress(), data, 'batch 001', new Date().getFullYear(), 'Unknown place');
-            console.log(hash);
-            await checkAndUpdateAllowance(this.state.account, hash)
+            await deveryClient.addProduct(Utils.getRandomAddress(), data, 'batch 001', new Date().getFullYear(), 'Unknown place');
         } catch (e) {
             console.log(e)
             // if (e.message.indexOf('User denied')) {
