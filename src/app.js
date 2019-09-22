@@ -92,12 +92,11 @@ export default class extends Component {
 
     handleAddProduct = async (data) => {
         try {
-            await deveryClient.addProduct(Utils.getRandomAddress(), data, 'batch 001', new Date().getFullYear(), 'Unknown place');
+            await deveryClient.AddProductAndMark(Utils.getRandomAddress(), data, 'batch 001', new Date().getFullYear(), 'Unknown place');
         } catch (e) {
-            console.log(e)
-            // if (e.message.indexOf('User denied')) {
-            //     console.log('The user denied the transaction')
-            // }
+            if (e.message.indexOf('User denied')) {
+                console.log('The user denied the transaction')
+            }
         }
     };
 
