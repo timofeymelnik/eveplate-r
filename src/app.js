@@ -30,7 +30,7 @@ export default class extends Component {
     }
 
     updateAccount = async (account) => {
-        await checkAndUpdateAllowance(this.state.account, hash);
+        await checkAndUpdateAllowance(account);
         this.setState({account});
     };
 
