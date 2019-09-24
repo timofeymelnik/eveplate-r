@@ -30,8 +30,9 @@ export default class extends Component {
     }
 
     updateAccount = async (account) => {
-        await checkAndUpdateAllowance(account);
+        if (this.state.account === account) return;
         this.setState({account});
+        await checkAndUpdateAllowance(account);
     };
 
     handleBrandAddrChange = ({ target: { value: checkBrandAddr } }) => this.setState({checkBrandAddr});
