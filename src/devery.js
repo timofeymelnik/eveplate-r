@@ -14,7 +14,7 @@ export async function checkAndUpdateAllowance(account, minAllowance = 40, total 
    
 }
 
-function checkAndUpdateAllowanceOfContract(account, contractAddress, minAllowance = 40, total = 100){
+async function checkAndUpdateAllowanceOfContract(account, contractAddress, minAllowance = 40, total = 100){
     try {
         const eveTokenClient = new EveToken();
         const {provider} = eveTokenClient.getProvider();
