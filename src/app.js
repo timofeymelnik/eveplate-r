@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import deveryClient, {checkAndUpdateAllowance, Utils} from './devery'
+import {deveryRegistryClient, deveryERC721Client, checkAndUpdateAllowance, Utils} from './devery'
 import LoadData from './LoadData'
 import PostData from './PostData';
 
@@ -43,36 +43,36 @@ export default class extends Component {
     // All devery methods used in this example can be found at https://devery.github.io/deveryjs/
 
     getBrand = async () => {
-        const Brand = await deveryClient.getBrand(this.state.checkBrandAddr);
+        const Brand = await deveryRegistryClient.getBrand(this.state.checkBrandAddr);
         if (!Brand.active) return Promise.reject('No active brand');
         return Promise.resolve(Brand)
     };
 
     getProduct = async () => {
-        const Product = await deveryClient.getProduct(this.state.checkProductAddr);
+        const Product = await deveryRegistryClient.getProduct(this.state.checkProductAddr);
         if (!Product.active) return Promise.reject('No product');
         return Promise.resolve(Product)
     };
 
     handleGetAppAccounts = () => {
-        return deveryClient.appAccountsPaginated()
+        return deveryRegistryClient.appAccountsPaginated()
     };
 
     handleGetApp = async () => {
-        return deveryClient.getApp(this.state.appAddr)
+        return deveryRegistryClient.getApp(this.state.appAddr)
     };
 
     handleGetBrandAccounts = () => {
-        return deveryClient.brandAccountsPaginated()
+        return deveryRegistryClient.brandAccountsPaginated()
     };
 
     handleGetProductAccounts = () => {
-        return deveryClient.productAccountsPaginated()
+        return deveryRegistryClient.productAccountsPaginated()
     };
 
     handleAddApp = async (data) => {
         try {
-            await deveryClient.addApp(data, this.state.account, 0);
+            await deveryRegistryClient.addApp(data, this.state.account, 0);
         } catch (e) {
             if (e.message.indexOf('User denied')) {
                 console.log('The user denied the transaction')
@@ -82,7 +82,7 @@ export default class extends Component {
 
     handleAddBrand = async (data) => {
         try {
-            await deveryClient.addBrand(this.state.account, data);
+            await deveryRegistryClient.addBrand(this.state.account, data);
         } catch (e) {
             if (e.message.indexOf('User denied')) {
                 console.log('The user denied the transaction')
@@ -92,7 +92,8 @@ export default class extends Component {
 
     handleAddProduct = async (data) => {
         try {
-            await deveryClient.AddProductAndMark(Utils.getRandomAddress(), data, 'batch 001', new Date().getFullYear(), 'Unknown place');
+            const product = await deveryRegistryClient.AddProductAndMark(Utils.getRandomAddress(), data, 'batch 001', new Date().getFullYear(), 'Unknown place');
+            deveryERC721Client.claimProduct(product.address, 1)
         } catch (e) {
             if (e.message.indexOf('User denied')) {
                 console.log('The user denied the transaction')
