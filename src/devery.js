@@ -1,8 +1,11 @@
 import {DeveryERC721, DeveryRegistry, EveToken, Utils} from "@devery/devery";
 
+const eveTokenClient = new EveToken();
+const deveryERC721Client = new DeveryERC721();
+const deveryRegistryClient = new DeveryRegistry();
+
 const checkAndUpdateAllowanceOfContract = contractAddress => async (account, minAllowance = 40, total = 100) => {
     try {
-        const eveTokenClient = new EveToken();
         const currentAllowance = await eveTokenClient.allowance(account, contractAddress);
         if (parseFloat(currentAllowance.toString()) / 10e17 >= minAllowance) return;
 
@@ -16,9 +19,6 @@ const checkAndUpdateAllowanceOfContract = contractAddress => async (account, min
 
 const allowanceForRegistry = checkAndUpdateAllowanceOfContract('0x0364a98148b7031451e79b93449b20090d79702a');
 const allowanceForERC = checkAndUpdateAllowanceOfContract('0x032ef0359eb068d3dddd6e91021c02f397afce5a');
-
-export const deveryERC721Client = new DeveryERC721();
-export const deveryRegistryClient = new DeveryRegistry();
 
 // All devery methods used in this example can be found at https://devery.github.io/deveryjs/
 
@@ -37,9 +37,9 @@ class DeveryExplorer {
         }
     }
 
-    async checkAndUpdateAllowance(account, minAllowance = 40, total = 100) {
-        await allowanceForERC(account, minAllowance, total);
-        await allowanceForRegistry(account, minAllowance, total);
+    async checkAndUpdateAllowance(account) {
+        await allowanceForERC(account);
+        await allowanceForRegistry(account);
     }
 
     async getBrand(addr) {

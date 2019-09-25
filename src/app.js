@@ -23,31 +23,23 @@ export default class extends Component {
         })
     }
 
-    /* Handle App */
     handleAppAccountChange = event => this.setState({appAddr: event.target.value});
+    handleBrandAddrChange = event => this.setState({brandAddr: event.target.value});
+    handleProductAddrChange = event => this.setState({productAddr: event.target.value});
 
-    handleGetApp = () => DeveryExplorer.getApp(this.state.appAddr);
-
+    /* Handle App */
     handleGetAppAccounts = () => DeveryExplorer.getAppAccounts();
-
+    handleGetApp = () => DeveryExplorer.getApp(this.state.appAddr);
     handleAddApp = data => DeveryExplorer.addApp(this.state.account, data);
 
     /* Handle Brand */
-    handleBrandAddrChange = event => this.setState({brandAddr: event.target.value});
-
-    getBrand = () => DeveryExplorer.getBrand(this.state.brandAddr);
-
     handleGetBrandAccounts = () => DeveryExplorer.getBrandAccounts();
-
+    getBrand = () => DeveryExplorer.getBrand(this.state.brandAddr);
     handleAddBrand = data => DeveryExplorer.addBrand(this.state.account, data);
 
     /* Handle Product */
-    handleProductAddrChange = event => this.setState({productAddr: event.target.value});
-
-    getProduct = () => DeveryExplorer.getProduct(this.state.productAddr);
-
     handleGetProductAccounts = () => DeveryExplorer.getProductAccounts();
-
+    getProduct = () => DeveryExplorer.getProduct(this.state.productAddr);
     handleAddProduct = data => DeveryExplorer.addProduct(data);
 
     render() {
