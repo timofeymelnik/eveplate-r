@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {deveryRegistryClient, deveryERC721Client, checkAndUpdateAllowance, Utils} from './devery'
+import DeveryExplorer from './devery'
 import LoadData from './LoadData'
 import PostData from './PostData';
 
@@ -9,106 +9,50 @@ export default class extends Component {
 
         this.state = {
             account: '',
-            checkBrandAddr: '',
-            checkProductAddr: '',
-            appAddr: null,
+            brandAddr: '',
+            productAddr: '',
+            appAddr: '',
         }
     }
 
     componentDidMount() {
-        if (!window.web3) return;
-
-        if (window.web3.eth && window.web3.eth.accounts) {
-            this.updateAccount(window.web3.eth.accounts[0]);
-        }
-
-        if (window.web3.currentProvider) {
-            window.web3.currentProvider.isMetaMask && window.web3.currentProvider.enable();
-            window.web3.currentProvider.publicConfigStore
-                .on('update', ({selectedAddress}) => this.updateAccount(selectedAddress));
-        }
+        DeveryExplorer.getAccount(async (account) => {
+            if (this.state.account === account) return;
+            this.setState({account});
+            await DeveryExplorer.checkAndUpdateAllowance(account);
+        })
     }
 
-    updateAccount = async (account) => {
-        if (this.state.account === account) return;
-        this.setState({account});
-        await checkAndUpdateAllowance(account);
-    };
+    /* Handle App */
+    handleAppAccountChange = event => this.setState({appAddr: event.target.value});
 
-    handleBrandAddrChange = ({ target: { value: checkBrandAddr } }) => this.setState({checkBrandAddr});
+    handleGetApp = () => DeveryExplorer.getApp(this.state.appAddr);
 
-    handleProductAddrChange = ({ target: { value: checkProductAddr } }) => this.setState({checkProductAddr});
+    handleGetAppAccounts = () => DeveryExplorer.getAppAccounts();
 
-    handleAppAccountChange = ({ target: { value: appAddr } }) => this.setState({appAddr});
+    handleAddApp = data => DeveryExplorer.addApp(this.state.account, data);
 
-    // All devery methods used in this example can be found at https://devery.github.io/deveryjs/
+    /* Handle Brand */
+    handleBrandAddrChange = event => this.setState({brandAddr: event.target.value});
 
-    getBrand = async () => {
-        const Brand = await deveryRegistryClient.getBrand(this.state.checkBrandAddr);
-        if (!Brand.active) return Promise.reject('No active brand');
-        return Promise.resolve(Brand)
-    };
+    getBrand = () => DeveryExplorer.getBrand(this.state.brandAddr);
 
-    getProduct = async () => {
-        const Product = await deveryRegistryClient.getProduct(this.state.checkProductAddr);
-        if (!Product.active) return Promise.reject('No product');
-        return Promise.resolve(Product)
-    };
+    handleGetBrandAccounts = () => DeveryExplorer.getBrandAccounts();
 
-    handleGetAppAccounts = () => {
-        return deveryRegistryClient.appAccountsPaginated()
-    };
+    handleAddBrand = data => DeveryExplorer.addBrand(this.state.account, data);
 
-    handleGetApp = async () => {
-        return deveryRegistryClient.getApp(this.state.appAddr)
-    };
+    /* Handle Product */
+    handleProductAddrChange = event => this.setState({productAddr: event.target.value});
 
-    handleGetBrandAccounts = () => {
-        return deveryRegistryClient.brandAccountsPaginated()
-    };
+    getProduct = () => DeveryExplorer.getProduct(this.state.productAddr);
 
-    handleGetProductAccounts = () => {
-        return deveryRegistryClient.productAccountsPaginated()
-    };
+    handleGetProductAccounts = () => DeveryExplorer.getProductAccounts();
 
-    handleAddApp = async (data) => {
-        try {
-            await deveryRegistryClient.addApp(data, this.state.account, 0);
-        } catch (e) {
-            if (e.message.indexOf('User denied')) {
-                console.log('The user denied the transaction')
-            }
-        }
-    };
-
-    handleAddBrand = async (data) => {
-        try {
-            await deveryRegistryClient.addBrand(this.state.account, data);
-        } catch (e) {
-            if (e.message.indexOf('User denied')) {
-                console.log('The user denied the transaction')
-            }
-        }
-    };
-
-    handleAddProduct = async (data) => {
-        try {
-            const productAddress = Utils.getRandomAddress();
-            const {hash} = await deveryRegistryClient.AddProductAndMark(productAddress, data, 'batch 001', new Date().getFullYear(), 'Unknown place');
-            const {provider} = deveryERC721Client.getProvider();
-
-            await provider.waitForTransaction(hash);
-            deveryERC721Client.claimProduct(productAddress, 1)
-        } catch (e) {
-            if (e.message.indexOf('User denied')) {
-                console.log('The user denied the transaction')
-            }
-        }
-    };
+    handleAddProduct = data => DeveryExplorer.addProduct(data);
 
     render() {
         const {
-            account
+            account, appAddr, brandAddr, productAddr
         } = this.state;
 
         return (
@@ -139,7 +83,7 @@ export default class extends Component {
                         <input type="text" placeholder="App Address" onChange={this.handleAppAccountChange}/>
                     </label>
                     {
-                        !this.state.appAddr
+                        !appAddr
                             ? (<span>Please insert App address first!</span>)
                             : (<LoadData
                                 buttonMessage='Get App'
@@ -151,7 +95,7 @@ export default class extends Component {
                 <fieldset>
                     <h3>Add App:</h3>
                     {
-                        !this.state.account
+                        !account
                             ? (<span>Login with metamask first!</span>)
                             : (<PostData
                                 postDataFunc={this.handleAddApp}
@@ -179,7 +123,7 @@ export default class extends Component {
                     </label>
 
                     {
-                        !this.state.checkBrandAddr
+                        !brandAddr
                             ? (<span>Please insert Brand address first!</span>)
                             : (<LoadData
                                 buttonMessage='Get Brand Info'
@@ -191,7 +135,7 @@ export default class extends Component {
                 <fieldset>
                     <h3>Add Brand:</h3>
                     {
-                        !this.state.account
+                        !account
                             ? (<span>Login with metamask first!</span>)
                             : (<PostData
                                 postDataFunc={this.handleAddBrand}
@@ -215,11 +159,12 @@ export default class extends Component {
                     <h3>Get Product Info:</h3>
                     <label>
                         <span>Product Info: productAccount, brandAccount, description, details, year, origin, active</span>
-                        <input type="text" placeholder="Enter A Product Address" onChange={this.handleProductAddrChange}/>
+                        <input type="text" placeholder="Enter A Product Address"
+                               onChange={this.handleProductAddrChange}/>
                     </label>
 
                     {
-                        !this.state.checkProductAddr
+                        !productAddr
                             ? (<span>Please insert Product address first!</span>)
                             : (<LoadData
                                 buttonMessage='Get Product Info'
@@ -231,7 +176,7 @@ export default class extends Component {
                 <fieldset>
                     <h3>Add Product:</h3>
                     {
-                        !this.state.account
+                        !account
                             ? (<span>Login with metamask first!</span>)
                             : (<PostData
                                 postDataFunc={this.handleAddProduct}
