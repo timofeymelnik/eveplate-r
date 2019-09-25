@@ -93,10 +93,11 @@ export default class extends Component {
 
     handleAddProduct = async (data) => {
         try {
-            let productAddress = Utils.getRandomAddress()
-            const txn = await deveryRegistryClient.AddProductAndMark(Utils.getRandomAddress(), data, 'batch 001', new Date().getFullYear(), 'Unknown place');
-            let provider = deveryERC721Client.getProvider()
-            await provider.provider.waitForTransaction(txn.hash)
+            const productAddress = Utils.getRandomAddress();
+            const {hash} = await deveryRegistryClient.AddProductAndMark(productAddress, data, 'batch 001', new Date().getFullYear(), 'Unknown place');
+            const {provider} = deveryERC721Client.getProvider();
+
+            await provider.waitForTransaction(hash);
             deveryERC721Client.claimProduct(productAddress, 1)
         } catch (e) {
             if (e.message.indexOf('User denied')) {
