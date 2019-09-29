@@ -37,6 +37,9 @@ export default class extends Component {
     getBrand = () => DeveryExplorer.getBrand(this.state.brandAddr);
     handleAddBrand = data => DeveryExplorer.addBrand(this.state.account, data);
 
+    /* Handle Account permission to mark account */
+    handlePermissionAccount = data => DeveryExplorer.permissionAccount(this.state.account);
+
     /* Handle Product */
     handleGetProductAccounts = () => DeveryExplorer.getProductAccounts();
     getProduct = () => DeveryExplorer.getProduct(this.state.productAddr);
@@ -131,6 +134,17 @@ export default class extends Component {
                             ? (<span>Login with metamask first!</span>)
                             : (<PostData
                                 postDataFunc={this.handleAddBrand}
+                            />)
+                    }
+                </fieldset>
+
+                <fieldset>
+                    <h3>Permission account marking</h3>
+                    {
+                        !account
+                            ? (<span>Login with metamask first!</span>)
+                            : (<PostData
+                                postDataFunc={this.handlePermissionAccount}
                             />)
                     }
                 </fieldset>

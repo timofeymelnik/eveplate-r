@@ -80,6 +80,16 @@ class DeveryExplorer {
         }
     }
 
+    async permissionAccount(account){
+        try {
+            await deveryRegistryClient.permissionMarker(account, true);
+        } catch (e) {
+            if (e.message.indexOf('User denied')) {
+                console.log('The user denied the transaction')
+            }
+        }
+    }
+
     async addBrand(account, data) {
         try {
             await deveryRegistryClient.addBrand(account, data);
