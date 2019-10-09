@@ -80,7 +80,7 @@ class DeveryExplorer {
         }
     }
 
-    async permissionAccount(account){
+    async permissionAccount(account) {
         try {
             await deveryRegistryClient.permissionMarker(account, true);
         } catch (e) {
@@ -119,6 +119,16 @@ class DeveryExplorer {
         } catch (e) {
             if (e.message.indexOf('User denied')) {
                 console.log('The user denied the transaction')
+            }
+        }
+    }
+
+    async safeTransferTo(fromAddress, toAddress, tokenId) {
+        try {
+            await deveryERC721Client.safeTransferFrom(fromAddress, toAddress, tokenId)
+        } catch (e) {
+            if (e.message.indexOf('gas required exceeds allowance or always failing transaction')) {
+                console.log('You do not own the product you are trying to transfer')
             }
         }
     }
