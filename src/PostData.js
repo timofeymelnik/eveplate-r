@@ -12,14 +12,16 @@ export default class extends Component {
         return (
             <form noValidate onSubmit={this.handlePostData}>
                 {
-                    this.fields.map(i => (
-                        <input
-                            type="text"
-                            id={i}
-                            title={i}
-                            placeholder={i}
-                            value={this.state[i]}
-                            onChange={this.handleChangeInput(i)}/>
+                    this.fields.map((i, index) => (
+                        <div id={i}>
+                            <input
+                                type="text"
+                                title={i}
+                                placeholder={i}
+                                value={this.state[i]}
+                                onChange={this.handleChangeInput(i)}/>
+                            {index < this.fields.length && (<span> , </span>)}
+                        </div>
                     ))
                 }
                 <br/>
