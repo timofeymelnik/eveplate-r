@@ -17,8 +17,11 @@ const checkAndUpdateAllowanceOfContract = contractAddress => async (account, min
     }
 };
 
-const allowanceForRegistry = checkAndUpdateAllowanceOfContract('0x0364a98148b7031451e79b93449b20090d79702a');
-const allowanceForERC = checkAndUpdateAllowanceOfContract('0x032ef0359eb068d3dddd6e91021c02f397afce5a');
+export const registryContractAddress = '0x0364a98148b7031451e79b93449b20090d79702a';
+export const ercContractAddress = '0x032ef0359eb068d3dddd6e91021c02f397afce5a';
+
+const allowanceForRegistry = checkAndUpdateAllowanceOfContract(registryContractAddress);
+const allowanceForERC = checkAndUpdateAllowanceOfContract(ercContractAddress);
 
 // All devery methods used in this example can be found at https://devery.github.io/deveryjs/
 

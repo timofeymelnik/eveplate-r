@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import DeveryExplorer from './devery'
+import DeveryExplorer, {ercContractAddress, registryContractAddress} from './devery'
 import LoadData from './LoadData'
 import PostData from './PostData';
 
@@ -43,9 +43,6 @@ export default class extends Component {
     getProduct = () => DeveryExplorer.getProduct(this.state.productAddr);
     handleAddProduct = data => DeveryExplorer.addProduct(data);
 
-    /* Handle ERC721 */
-    handleTransfer = (toAddress, tokenId) => DeveryExplorer.safeTransferTo(this.state.account, toAddress, tokenId);
-
     render() {
         const {
             account, appAddr, brandAddr, productAddr
@@ -61,6 +58,9 @@ export default class extends Component {
                         ? <span>Please sign in to MetaMask</span>
                         : <span>{account}</span>
                 }
+
+                <span>Registry Contract Address: {registryContractAddress}</span>
+                <span>ERC721 Contract Address: {ercContractAddress}</span>
 
                 <h2>APP INFO</h2>
                 <fieldset>
@@ -200,8 +200,8 @@ export default class extends Component {
                         !account
                             ? (<span>Login with metamask first!</span>)
                             : (<PostData
-                                postDataFunc={this.handleTransfer}
-                                fields={['toAddress', 'tokenId']}
+                                postDataFunc={DeveryExplorer.safeTransferTo}
+                                fields={['fromAddress', 'toAddress', 'tokenId']}
                             />)
                     }
                 </fieldset>

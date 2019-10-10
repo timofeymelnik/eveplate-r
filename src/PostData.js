@@ -13,16 +13,14 @@ export default class extends Component {
             <form noValidate onSubmit={this.handlePostData}>
                 {
                     this.fields.map(i => (
-                        <div id={i}>
-                            <input
-                                type="text"
-                                title={i.toUpperCase()}
-                                placeholder={i.toUpperCase()}
-                                value={this.state[i]}
-                                onChange={this.handleChangeInput(i)} />
-                            <br/>
-                        </div>
-                        ))
+                        <input
+                            type="text"
+                            id={i}
+                            title={i}
+                            placeholder={i}
+                            value={this.state[i]}
+                            onChange={this.handleChangeInput(i)}/>
+                    ))
                 }
                 <br/>
                 <button type="submit">Add</button>
@@ -36,7 +34,7 @@ export default class extends Component {
         event.preventDefault();
 
         try {
-            await this.props.postDataFunc.apply(null, this.fields.map(i => this.state[i]));
+            await this.props.postDataFunc(...this.fields.map(i => this.state[i]));
         } catch (e) {
             console.error(e);
         }
