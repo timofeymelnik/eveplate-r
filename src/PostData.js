@@ -30,11 +30,12 @@ export default class extends Component {
 
     handleChangeInput = field => event => this.setState({[field]: event.target.value});
 
-    handlePostData = async (event) => {
+    handlePostData = async event => {
         event.preventDefault();
 
         try {
-            await this.props.postDataFunc(...this.fields.map(i => this.state[i]));
+            const result = await this.props.postDataFunc(...this.fields.map(i => this.state[i]));
+            console.log(result)
         } catch (e) {
             console.error(e);
         }
