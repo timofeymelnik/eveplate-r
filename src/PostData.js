@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 export default class extends Component {
     constructor(props, context) {
@@ -13,15 +13,15 @@ export default class extends Component {
             <form noValidate onSubmit={this.handlePostData}>
                 {
                     this.fields.map((i, index) => (
-                        <div id={i}>
+                        <Fragment key={i}>
                             <input
                                 type="text"
                                 title={i}
                                 placeholder={i}
                                 value={this.state[i]}
                                 onChange={this.handleChangeInput(i)}/>
-                            {index < this.fields.length && (<span> , </span>)}
-                        </div>
+                            {(index < this.fields.length - 1) && (<b> , </b>)}
+                        </Fragment>
                     ))
                 }
                 <br/>

@@ -196,6 +196,7 @@ export default class extends Component {
 
                 <fieldset>
                     <h3>Transfer Token:</h3>
+                    <p>Safe Transfer Token: current owner account address as fromAddress, new owner account address as toAddress, tokenId</p>
                     {
                         !account
                             ? (<span>Login with metamask first!</span>)
