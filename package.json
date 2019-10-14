@@ -12,9 +12,10 @@
     },
     "keywords": [],
     "dependencies": {
+        "@babel/runtime": "^7.5.5",
+        "@devery/devery": "^0.1.29",
         "react": "^16.8.6",
-        "react-dom": "^16.8.6",
-        "@babel/runtime": "^7.5.5"
+        "react-dom": "^16.8.6"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
